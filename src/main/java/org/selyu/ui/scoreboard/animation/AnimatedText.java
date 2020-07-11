@@ -7,11 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AnimatedText {
-    public static int frameUpdateSpeed = 3;
-
     protected final List<String> framesList = new ArrayList<>();
     protected int frameCount = 0;
     protected int currentFrameIdx = 0;
+    private int updateSpeed = 3;
 
     public AnimatedText(@NotNull String... frames) {
         framesList.addAll(Arrays.asList(frames));
@@ -24,7 +23,7 @@ public abstract class AnimatedText {
     public void nextFrame() {
         if (framesList.size() > 1) {
             frameCount++;
-            if (frameCount % frameUpdateSpeed == 0) {
+            if (frameCount % updateSpeed == 0) {
                 currentFrameIdx++;
             }
         }
@@ -54,5 +53,13 @@ public abstract class AnimatedText {
 
     public final void setCurrentFrameIdx(int currentFrameIdx) {
         this.currentFrameIdx = currentFrameIdx;
+    }
+
+    public int getUpdateSpeed() {
+        return updateSpeed;
+    }
+
+    public void setUpdateSpeed(int updateSpeed) {
+        this.updateSpeed = updateSpeed;
     }
 }
