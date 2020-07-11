@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ScoreboardObjective extends AnimatedText {
-    public ScoreboardObjective(@NotNull String firstFrame) {
-        super(firstFrame);
+    public ScoreboardObjective(@NotNull String... frames) {
+        super(frames);
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static ListBuilder builder() {
+        return new ListBuilder();
     }
 
     // From https://github.com/selyu/Tablist/blob/master/api/src/main/java/xyz/selyu/tablist/util/TabUtil.java#L65
@@ -45,40 +45,23 @@ public final class ScoreboardObjective extends AnimatedText {
         return splitText(getCurrentFrame());
     }
 
-    public static final class Builder {
+    public static final class ListBuilder {
         private final List<ScoreboardObjective> objectives = new ArrayList<>();
 
-        private Builder() {
+        private ListBuilder() {
         }
 
-        public Builder addObjective(@NotNull String frame) {
-            return addObjective(frame, true);
-        }
-
-        public Builder addObjective(@NotNull String frame, boolean color) {
-            if (color)
-                frame = ChatColor.translateAlternateColorCodes('&', frame);
-            objectives.add(new ScoreboardObjective(frame));
-            return this;
-        }
-
-        public Builder addObjective(@NotNull String... frames) {
+        public ListBuilder addObjective(@NotNull String... frames) {
             return addObjective(true, frames);
         }
 
-        public Builder addObjective(boolean color, @NotNull String... frames) {
+        public ListBuilder addObjective(boolean color, @NotNull String... frames) {
             if (color) {
                 for (int idx = 0; idx < frames.length; idx++) {
                     frames[idx] = ChatColor.translateAlternateColorCodes('&', frames[idx]);
                 }
             }
-            ScoreboardObjective objective = new ScoreboardObjective(frames[0]);
-
-            for (int idx = 1; idx < frames.length; idx++) {
-                objective.addFrame(frames[idx]);
-            }
-
-            objectives.add(objective);
+            objectives.add(new ScoreboardObjective(frames));
             return this;
         }
 

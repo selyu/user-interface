@@ -9,27 +9,16 @@ public final class ScoreboardTitle extends AnimatedText {
         super(frames);
     }
 
-    public static @NotNull ScoreboardTitle of(@NotNull String frame) {
-        return of(true, frame);
+    public static @NotNull ScoreboardTitle of(@NotNull String... frames) {
+        return of(true, frames);
     }
 
-    public static @NotNull ScoreboardTitle of(boolean color, @NotNull String frame) {
-        if (color)
-            frame = ChatColor.translateAlternateColorCodes('&', frame);
-        return new ScoreboardTitle(frame);
-    }
-
-    public static @NotNull ScoreboardTitle ofFrames(@NotNull String... frames) {
-        return ofFrames(true, frames);
-    }
-
-    public static @NotNull ScoreboardTitle ofFrames(boolean color, @NotNull String... frames) {
+    public static @NotNull ScoreboardTitle of(boolean color, @NotNull String... frames) {
         if (color) {
             for (int idx = 0; idx < frames.length; idx++) {
                 frames[idx] = ChatColor.translateAlternateColorCodes('&', frames[idx]);
             }
         }
-
         return new ScoreboardTitle(frames);
     }
 }
