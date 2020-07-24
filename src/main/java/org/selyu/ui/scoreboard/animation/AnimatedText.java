@@ -7,10 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AnimatedText {
+    public static int globalUpdateSpeed = 3;
+
     protected final List<String> framesList = new ArrayList<>();
     protected int frameCount = 0;
     protected int currentFrameIdx = 0;
-    private int updateSpeed = 3;
+    private int updateSpeed = -1;
 
     public AnimatedText(@NotNull String... frames) {
         framesList.addAll(Arrays.asList(frames));
@@ -23,7 +25,7 @@ public abstract class AnimatedText {
     public void nextFrame() {
         if (framesList.size() > 1) {
             frameCount++;
-            if (frameCount % updateSpeed == 0) {
+            if (frameCount % (updateSpeed == -1 ? globalUpdateSpeed : updateSpeed) == 0) {
                 currentFrameIdx++;
             }
         }

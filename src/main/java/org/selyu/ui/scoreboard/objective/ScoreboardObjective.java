@@ -20,7 +20,7 @@ public final class ScoreboardObjective extends AnimatedText {
     private static String[] splitText(String text) {
         if (text.length() > 16) {
             String prefix = text.substring(0, 16);
-            String suffix = "";
+            String suffix;
 
             if (prefix.charAt(15) == ChatColor.COLOR_CHAR || prefix.charAt(15) == '&') {
                 prefix = prefix.substring(0, 15);
@@ -52,16 +52,27 @@ public final class ScoreboardObjective extends AnimatedText {
         }
 
         public ListBuilder addObjective(@NotNull String... frames) {
-            return addObjective(true, frames);
+            return addObjective(true, -1, frames);
         }
 
         public ListBuilder addObjective(boolean color, @NotNull String... frames) {
+            return addObjective(color, -1, frames);
+        }
+
+        public ListBuilder addObjective(int updateSpeed, @NotNull String... frames) {
+            return addObjective(true, updateSpeed, frames);
+        }
+
+        public ListBuilder addObjective(boolean color, int updateSpeed, @NotNull String... frames) {
             if (color) {
                 for (int idx = 0; idx < frames.length; idx++) {
                     frames[idx] = ChatColor.translateAlternateColorCodes('&', frames[idx]);
                 }
             }
-            objectives.add(new ScoreboardObjective(frames));
+
+            ScoreboardObjective scoreboardObjective = new ScoreboardObjective(frames);
+            scoreboardObjective.setUpdateSpeed(updateSpeed);
+            objectives.add(scoreboardObjective);
             return this;
         }
 
