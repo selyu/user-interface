@@ -4,13 +4,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.jetbrains.annotations.NotNull;
 import org.selyu.ui.scoreboard.adapter.ScoreboardAdapter;
 import org.selyu.ui.scoreboard.entry.ScoreboardEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 public final class Scoreboard {
     private final UUID owner;
@@ -20,7 +21,11 @@ public final class Scoreboard {
     private final Objective bukkitObjective;
     private final List<ScoreboardEntry> scoreboardEntryList = new ArrayList<>();
 
-    public Scoreboard(@NotNull UUID owner, @NotNull JavaPlugin plugin, @NotNull ScoreboardAdapter adapter, @NotNull org.bukkit.scoreboard.Scoreboard bukkitScoreboard) {
+    public Scoreboard(UUID owner, JavaPlugin plugin, ScoreboardAdapter adapter, org.bukkit.scoreboard.Scoreboard bukkitScoreboard) {
+        requireNonNull(owner, "owner");
+        requireNonNull(plugin, "plugin");
+        requireNonNull(adapter, "adapter");
+        requireNonNull(bukkitScoreboard, "bukkitScoreboard");
         this.owner = owner;
         this.plugin = plugin;
         this.adapter = adapter;
@@ -42,7 +47,8 @@ public final class Scoreboard {
      *
      * @param entry The entry to add
      */
-    public void addEntry(@NotNull ScoreboardEntry entry) {
+    public void addEntry(ScoreboardEntry entry) {
+        requireNonNull(entry, "entry");
         if (!scoreboardEntryList.contains(entry))
             scoreboardEntryList.add(entry);
     }
@@ -61,7 +67,7 @@ public final class Scoreboard {
         bukkitScoreboard.resetScores(entry.getTeamName());
     }
 
-    public @NotNull ScoreboardAdapter getAdapter() {
+    public ScoreboardAdapter getAdapter() {
         return adapter;
     }
 
@@ -69,7 +75,7 @@ public final class Scoreboard {
      * @return The player
      * @throws NullPointerException If player is null/offline
      */
-    public @NotNull Player getOwnerAsPlayer() {
+    public Player getOwnerAsPlayer() {
         Player player = plugin.getServer().getPlayer(owner);
         if (player == null)
             throw new NullPointerException("Player is null");
@@ -77,15 +83,15 @@ public final class Scoreboard {
         return player;
     }
 
-    public @NotNull org.bukkit.scoreboard.Scoreboard getBukkitScoreboard() {
+    public org.bukkit.scoreboard.Scoreboard getBukkitScoreboard() {
         return bukkitScoreboard;
     }
 
-    public @NotNull Objective getBukkitObjective() {
+    public Objective getBukkitObjective() {
         return bukkitObjective;
     }
 
-    public @NotNull List<ScoreboardEntry> getScoreboardEntryList() {
+    public List<ScoreboardEntry> getScoreboardEntryList() {
         return scoreboardEntryList;
     }
 }

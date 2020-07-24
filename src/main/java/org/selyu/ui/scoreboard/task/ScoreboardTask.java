@@ -1,6 +1,5 @@
 package org.selyu.ui.scoreboard.task;
 
-import org.jetbrains.annotations.NotNull;
 import org.selyu.ui.scoreboard.Scoreboard;
 import org.selyu.ui.scoreboard.entry.ScoreboardEntry;
 import org.selyu.ui.scoreboard.objective.ScoreboardObjective;
@@ -11,10 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static java.util.Objects.requireNonNull;
+
 public final class ScoreboardTask implements Runnable {
     private final Map<UUID, Scoreboard> scoreboardMap;
 
-    public ScoreboardTask(@NotNull Map<UUID, Scoreboard> scoreboardMap) {
+    public ScoreboardTask(Map<UUID, Scoreboard> scoreboardMap) {
+        requireNonNull(scoreboardMap, "scoreboardMap");
         this.scoreboardMap = scoreboardMap;
     }
 

@@ -1,14 +1,15 @@
 package org.selyu.ui.scoreboard.objective;
 
 import org.bukkit.ChatColor;
-import org.jetbrains.annotations.NotNull;
 import org.selyu.ui.scoreboard.animation.AnimatedText;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.requireNonNull;
+
 public final class ScoreboardObjective extends AnimatedText {
-    public ScoreboardObjective(@NotNull String... frames) {
+    public ScoreboardObjective(String... frames) {
         super(frames);
     }
 
@@ -41,7 +42,7 @@ public final class ScoreboardObjective extends AnimatedText {
         return new String[]{text, ""};
     }
 
-    public @NotNull String[] getCurrentFramePrefixSuffix() {
+    public String[] getCurrentFramePrefixSuffix() {
         return splitText(getCurrentFrame());
     }
 
@@ -51,19 +52,21 @@ public final class ScoreboardObjective extends AnimatedText {
         private ListBuilder() {
         }
 
-        public ListBuilder addObjective(@NotNull String... frames) {
+        public ListBuilder addObjective(String... frames) {
             return addObjective(true, -1, frames);
         }
 
-        public ListBuilder addObjective(boolean color, @NotNull String... frames) {
+        public ListBuilder addObjective(boolean color, String... frames) {
             return addObjective(color, -1, frames);
         }
 
-        public ListBuilder addObjective(int updateSpeed, @NotNull String... frames) {
+        public ListBuilder addObjective(int updateSpeed, String... frames) {
             return addObjective(true, updateSpeed, frames);
         }
 
-        public ListBuilder addObjective(boolean color, int updateSpeed, @NotNull String... frames) {
+        public ListBuilder addObjective(boolean color, int updateSpeed, String... frames) {
+            requireNonNull(frames, "frames");
+
             if (color) {
                 for (int idx = 0; idx < frames.length; idx++) {
                     frames[idx] = ChatColor.translateAlternateColorCodes('&', frames[idx]);
@@ -76,7 +79,7 @@ public final class ScoreboardObjective extends AnimatedText {
             return this;
         }
 
-        public @NotNull List<ScoreboardObjective> build() {
+        public List<ScoreboardObjective> build() {
             return objectives;
         }
     }

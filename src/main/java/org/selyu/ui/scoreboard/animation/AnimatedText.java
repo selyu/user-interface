@@ -1,10 +1,10 @@
 package org.selyu.ui.scoreboard.animation;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 public abstract class AnimatedText {
     public static int globalUpdateSpeed = 3;
@@ -14,11 +14,13 @@ public abstract class AnimatedText {
     protected int currentFrameIdx = 0;
     private int updateSpeed = -1;
 
-    public AnimatedText(@NotNull String... frames) {
+    public AnimatedText(String... frames) {
+        requireNonNull(frames, "frames");
         framesList.addAll(Arrays.asList(frames));
     }
 
-    public final void addFrame(@NotNull String frame) {
+    public final void addFrame(String frame) {
+        requireNonNull(frame, "frame");
         framesList.add(frame);
     }
 
@@ -31,13 +33,13 @@ public abstract class AnimatedText {
         }
     }
 
-    public final @NotNull String getCurrentFrame() {
+    public final String getCurrentFrame() {
         if (currentFrameIdx >= framesList.size())
             currentFrameIdx = 0;
         return framesList.get(currentFrameIdx);
     }
 
-    public final @NotNull List<String> getFramesList() {
+    public final List<String> getFramesList() {
         return framesList;
     }
 

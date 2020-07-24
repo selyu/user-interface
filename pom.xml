@@ -10,8 +10,6 @@
 
     <properties>
         <java.version>11</java.version>
-        <spigot.version>1.16.1-R0.1-SNAPSHOT</spigot.version>
-        <jetbrains.annotations.version>16.0.2</jetbrains.annotations.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -31,14 +29,8 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>${spigot.version}</version>
+            <version>1.16.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>16.0.2</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

@@ -2,12 +2,13 @@ package org.selyu.ui.scoreboard.entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.NotNull;
 import org.selyu.ui.scoreboard.Scoreboard;
 import org.selyu.ui.scoreboard.objective.ScoreboardObjective;
 import org.selyu.ui.scoreboard.title.ScoreboardTitle;
 
 import java.util.concurrent.ThreadLocalRandom;
+
+import static java.util.Objects.requireNonNull;
 
 public final class ScoreboardEntry {
     private final Team bukkitTeam;
@@ -15,7 +16,10 @@ public final class ScoreboardEntry {
     private ScoreboardObjective objective;
     private ScoreboardTitle title;
 
-    public ScoreboardEntry(@NotNull Scoreboard scoreboard, @NotNull ScoreboardObjective objective, @NotNull ScoreboardTitle title) {
+    public ScoreboardEntry(Scoreboard scoreboard, ScoreboardObjective objective, ScoreboardTitle title) {
+        requireNonNull(scoreboard, "scoreboard");
+        requireNonNull(objective, "objective");
+        requireNonNull(title, "title");
         this.objective = objective;
         this.title = title;
         teamName = createUniqueTeamName(scoreboard.getBukkitScoreboard());
@@ -33,7 +37,8 @@ public final class ScoreboardEntry {
      * @param bukkitScoreboard The scoreboard
      * @return Unique team name
      */
-    private static String createUniqueTeamName(@NotNull org.bukkit.scoreboard.Scoreboard bukkitScoreboard) {
+    private static String createUniqueTeamName(org.bukkit.scoreboard.Scoreboard bukkitScoreboard) {
+        requireNonNull(bukkitScoreboard, "bukkitScoreboard");
         String teamName = ChatColor.values()[ThreadLocalRandom.current().nextInt(ChatColor.values().length)] + "";
         while (bukkitScoreboard.getTeam(teamName) != null)
             teamName += ChatColor.values()[ThreadLocalRandom.current().nextInt(ChatColor.values().length)];
@@ -44,27 +49,29 @@ public final class ScoreboardEntry {
         return teamName;
     }
 
-    public @NotNull ScoreboardObjective getObjective() {
+    public ScoreboardObjective getObjective() {
         return objective;
     }
 
-    public void setObjective(@NotNull ScoreboardObjective objective) {
+    public void setObjective(ScoreboardObjective objective) {
+        requireNonNull(objective, "objective");
         this.objective = objective;
     }
 
-    public @NotNull ScoreboardTitle getTitle() {
+    public ScoreboardTitle getTitle() {
         return title;
     }
 
-    public void setTitle(@NotNull ScoreboardTitle title) {
+    public void setTitle(ScoreboardTitle title) {
+        requireNonNull(title, "title");
         this.title = title;
     }
 
-    public @NotNull Team getBukkitTeam() {
+    public Team getBukkitTeam() {
         return bukkitTeam;
     }
 
-    public @NotNull String getTeamName() {
+    public String getTeamName() {
         return teamName;
     }
 }
