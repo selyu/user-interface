@@ -1,6 +1,8 @@
 <img src="assets/example-scoreboard.gif" alt="scoreboard example" align="right" />
 <h1 align="left">user-interface</h1>
 
+Spigot UI made simple.
+
 ## Setup
 
 ### Maven
