@@ -1,7 +1,5 @@
-# user-interface
-Simple UI handling for Spigot plugins
-
-![Example Scoreboard](assets/example-scoreboard.gif)
+<img src="assets/example-scoreboard.gif" alt="scoreboard example" align="right" />
+<h1 align="left">user-interface</h1>
 
 ## Setup
 
