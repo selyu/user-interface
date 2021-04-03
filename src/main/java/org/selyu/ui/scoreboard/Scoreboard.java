@@ -4,8 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.selyu.ui.scoreboard.adapter.ScoreboardAdapter;
-import org.selyu.ui.scoreboard.entry.ScoreboardEntry;
+import org.selyu.ui.scoreboard.adapter.IScoreboardAdapter;
+import org.selyu.ui.scoreboard.model.ScoreboardEntry;
+import org.selyu.ui.scoreboard.model.ScoreboardTitle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +17,13 @@ import static java.util.Objects.requireNonNull;
 public final class Scoreboard {
     private final UUID owner;
     private final JavaPlugin plugin;
-    private final ScoreboardAdapter adapter;
+    private final IScoreboardAdapter adapter;
     private final org.bukkit.scoreboard.Scoreboard bukkitScoreboard;
     private final Objective bukkitObjective;
     private final List<ScoreboardEntry> scoreboardEntryList = new ArrayList<>();
+    private ScoreboardTitle lastTitle;
 
-    public Scoreboard(UUID owner, JavaPlugin plugin, ScoreboardAdapter adapter, org.bukkit.scoreboard.Scoreboard bukkitScoreboard) {
+    public Scoreboard(UUID owner, JavaPlugin plugin, IScoreboardAdapter adapter, org.bukkit.scoreboard.Scoreboard bukkitScoreboard) {
         requireNonNull(owner, "owner");
         requireNonNull(plugin, "plugin");
         requireNonNull(adapter, "adapter");
@@ -67,7 +69,7 @@ public final class Scoreboard {
         bukkitScoreboard.resetScores(entry.getTeamName());
     }
 
-    public ScoreboardAdapter getAdapter() {
+    public IScoreboardAdapter getAdapter() {
         return adapter;
     }
 
@@ -93,5 +95,13 @@ public final class Scoreboard {
 
     public List<ScoreboardEntry> getScoreboardEntryList() {
         return scoreboardEntryList;
+    }
+
+    public ScoreboardTitle getLastTitle() {
+        return lastTitle;
+    }
+
+    public void setLastTitle(ScoreboardTitle lastTitle) {
+        this.lastTitle = lastTitle;
     }
 }

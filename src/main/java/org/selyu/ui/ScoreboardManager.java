@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.selyu.ui.scoreboard.Scoreboard;
-import org.selyu.ui.scoreboard.adapter.ScoreboardAdapter;
+import org.selyu.ui.scoreboard.adapter.IScoreboardAdapter;
 import org.selyu.ui.scoreboard.task.ScoreboardTask;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ final class ScoreboardManager implements Listener {
         plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new ScoreboardTask(scoreboardMap), 0, updateSpeedTicks);
     }
 
-    public void setBoard(Player player, ScoreboardAdapter adapter) {
+    public void setBoard(Player player, IScoreboardAdapter adapter) {
         requireNonNull(player, "player");
         requireNonNull(adapter, "adapter");
         scoreboardMap.put(player.getUniqueId(), new Scoreboard(

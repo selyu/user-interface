@@ -1,9 +1,9 @@
 package org.selyu.ui.scoreboard.task;
 
 import org.selyu.ui.scoreboard.Scoreboard;
-import org.selyu.ui.scoreboard.entry.ScoreboardEntry;
-import org.selyu.ui.scoreboard.objective.ScoreboardObjective;
-import org.selyu.ui.scoreboard.title.ScoreboardTitle;
+import org.selyu.ui.scoreboard.model.ScoreboardEntry;
+import org.selyu.ui.scoreboard.model.ScoreboardLine;
+import org.selyu.ui.scoreboard.model.ScoreboardTitle;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,49 +26,55 @@ public final class ScoreboardTask implements Runnable {
     @Override
     public void run() {
         scoreboardMap.forEach((owner, scoreboard) -> {
-            List<ScoreboardObjective> objectives = scoreboard.getAdapter().getObjectives();
-            Collections.reverse(objectives);
+            requireNonNull(scoreboard.getAdapter().getTitle(), "title");
+            requireNonNull(scoreboard.getAdapter().getLines(), "lines");
+
+            List<ScoreboardLine> adapterLines = scoreboard.getAdapter().getLines();
+            Collections.reverse(adapterLines);
 
             // Remove excess entries
-            if (scoreboard.getScoreboardEntryList().size() > objectives.size()) {
-                for (int idx = objectives.size(); idx < scoreboard.getScoreboardEntryList().size(); idx++) {
-                    scoreboard.removeEntry(idx);
+            if (scoreboard.getScoreboardEntryList().size() > adapterLines.size()) {
+                for (int i = adapterLines.size(); i < scoreboard.getScoreboardEntryList().size(); i++) {
+                    scoreboard.removeEntry(i);
                 }
             }
 
-            for (int idx = 0; idx < objectives.size(); idx++) {
-                ScoreboardEntry scoreboardEntry = scoreboard.getEntry(idx);
-                ScoreboardObjective scoreboardObjective = objectives.get(idx);
-                ScoreboardTitle scoreboardTitle = scoreboard.getAdapter().getTitle();
+            // The "lastTitle" is used for keeping track of the frame counter
+            // So every time the lastTitle frames doesn't match the frames given by the adapter it should reset
+            if (scoreboard.getLastTitle() == null || !scoreboard.getLastTitle().getFrames().equals(scoreboard.getAdapter().getTitle().getFrames())) {
+                scoreboard.setLastTitle(scoreboard.getAdapter().getTitle());
+            }
+
+            ScoreboardTitle title = scoreboard.getLastTitle();
+
+            // No need to update if nothing is changed
+            if (!scoreboard.getBukkitObjective().displayName().equals(title.getCurrentFrame())) {
+                scoreboard.getBukkitObjective().displayName(title.getCurrentFrame());
+            }
+
+            title.nextFrame();
+
+            for (int i = 0; i < adapterLines.size(); i++) {
+                ScoreboardEntry scoreboardEntry = scoreboard.getEntry(i);
+                ScoreboardLine adapterLine = adapterLines.get(i);
 
                 if (scoreboardEntry == null) {
-                    scoreboardEntry = new ScoreboardEntry(scoreboard, scoreboardObjective, scoreboardTitle);
+                    scoreboardEntry = new ScoreboardEntry(scoreboard, adapterLine);
                     scoreboard.addEntry(scoreboardEntry);
                 }
 
-                // Compare the possibly previously existing entries frame list to the one from the adapter
-                // This is to keep animations actually updating instead of just being the first frame from the adapter
-                if (scoreboardObjective.getFramesList().equals(scoreboardEntry.getObjective().getFramesList())) {
-                    scoreboardObjective.setFrameCount(scoreboardEntry.getObjective().getFrameCount());
-                    scoreboardObjective.setCurrentFrameIdx(scoreboardEntry.getObjective().getCurrentFrameIdx());
+                // Check if the adapterLine has been updated
+                if (!adapterLine.getFrames().equals(scoreboardEntry.getLine().getFrames())) {
+                    scoreboardEntry.setLine(adapterLine);
                 }
 
-                if (scoreboardTitle.getFramesList().equals(scoreboardEntry.getTitle().getFramesList())) {
-                    scoreboardTitle.setFrameCount(scoreboardEntry.getTitle().getFrameCount());
-                    scoreboardTitle.setCurrentFrameIdx(scoreboardEntry.getTitle().getCurrentFrameIdx());
+                // No need to update if nothing has changed
+                if (!scoreboardEntry.getBukkitTeam().prefix().equals(scoreboardEntry.getLine().getCurrentFrame())) {
+                    scoreboardEntry.getBukkitTeam().prefix(scoreboardEntry.getLine().getCurrentFrame());
                 }
 
-                if (!scoreboard.getBukkitObjective().getDisplayName().equals(scoreboardTitle.getCurrentFrame()))
-                    scoreboard.getBukkitObjective().setDisplayName(scoreboardTitle.getCurrentFrame());
-
-                scoreboardEntry.setObjective(scoreboardObjective);
-                scoreboardEntry.setTitle(scoreboardTitle);
-                scoreboardEntry.getBukkitTeam().setPrefix(scoreboardEntry.getObjective().getCurrentFramePrefixSuffix()[0]);
-                scoreboardEntry.getBukkitTeam().setSuffix(scoreboardEntry.getObjective().getCurrentFramePrefixSuffix()[1]);
-
-                scoreboard.getBukkitObjective().getScore(scoreboardEntry.getTeamName()).setScore(idx);
-                scoreboardEntry.getObjective().nextFrame();
-                scoreboardEntry.getTitle().nextFrame();
+                scoreboardEntry.getLine().nextFrame();
+                scoreboard.getBukkitObjective().getScore(scoreboardEntry.getTeamName()).setScore(i);
             }
         });
     }

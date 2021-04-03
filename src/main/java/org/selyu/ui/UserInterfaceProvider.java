@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.selyu.ui.listener.UserInterfaceListener;
-import org.selyu.ui.scoreboard.adapter.ScoreboardAdapter;
+import org.selyu.ui.scoreboard.adapter.IScoreboardAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,12 +29,12 @@ public final class UserInterfaceProvider {
     }
 
     /**
-     * Add the player to the scoreboard map for updating with the task
+     * Set a {@link IScoreboardAdapter} for the players scoreboard to display from.
      *
      * @param player  The player
      * @param adapter The adapter
      */
-    public void setBoard(Player player, ScoreboardAdapter adapter) {
+    public void setBoard(Player player, IScoreboardAdapter adapter) {
         requireNonNull(player, "player");
         requireNonNull(adapter, "adapter");
         scoreboardManager.setBoard(player, adapter);
@@ -57,7 +57,6 @@ public final class UserInterfaceProvider {
      */
     public Scoreboard getBukkitScoreboard(Player player) {
         requireNonNull(player, "player");
-        //noinspection ConstantConditions
         return bukkitScoreboardMap.computeIfAbsent(player.getUniqueId(), (uuid) -> plugin.getServer().getScoreboardManager().getNewScoreboard());
     }
 }
